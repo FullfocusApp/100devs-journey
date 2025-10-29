@@ -4,42 +4,39 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1"
+      content="width=device-width, initial-scale=1,maximum-scale=1"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Metro Transit — Pass</title>
-
     <style>
       :root {
-        --bg: #ffffff;
-        --accent: #f37021; /* orange */
+        --bg: #fff;
+        --accent: #f37021;
         --dark: #222;
         --muted: #6b6b6b;
-        --card-shadow: rgba(0, 0, 0, 0.12);
         --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial;
+        --halo-dark: rgba(60, 60, 60, 0.7);
       }
       html,
       body {
         height: 100%;
         margin: 0;
-        font-family: var(--font-sans);
         background: var(--bg);
         color: var(--dark);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        font-family: var(--font-sans);
       }
       .container {
-        max-width: 420px;
+        max-width: 430px;
         margin: 0 auto;
-        padding: 18px 18px 60px;
+        padding: 18px 18px calc(60px + env(safe-area-inset-bottom, 0));
         box-sizing: border-box;
       }
 
       /* header */
       .hdr {
         margin-top: 6px;
-        margin-bottom: 22px;
+        margin-bottom: 18px;
         text-align: left;
       }
       .title {
@@ -48,162 +45,145 @@
         margin: 0;
       }
       .subtitle {
-        margin: 4px 0 0;
+        margin: 8px 0 0;
         color: var(--muted);
-        font-size: 13.5px;
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        word-spacing: 0.6px;
+        line-height: 1.25;
       }
 
-      /* badge area */
+      /* badge */
       .badge-wrap {
-        width: 220px;
-        height: 220px;
-        margin: 10px auto 8px;
+        width: 204px;
+        height: 204px;
+        margin: 12px auto 48px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      .ring {
+
+      /* orange core */
+      .core-orange {
         position: absolute;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        left: 0;
-        top: 0;
-        box-shadow: inset 0 0 0 36px var(--accent);
-        z-index: 1;
-      }
-      .pulse-orange,
-      .pulse-gray {
-        position: absolute;
-        border-radius: 50%;
         left: 50%;
         top: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        z-index: 2;
-        pointer-events: none;
-      }
-      .pulse-orange {
-        width: 220px;
-        height: 220px;
-        background: var(--accent);
-        opacity: 0.18;
-        animation: pulseOrange 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-      }
-      .pulse-gray {
-        width: 180px;
-        height: 180px;
-        background: #999;
-        opacity: 0.06;
-        animation: pulseGray 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-        animation-delay: 2.5s;
-      }
-
-      @keyframes pulseOrange {
-        0% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.18;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.12);
-          opacity: 0.06;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(1.22);
-          opacity: 0;
-        }
-      }
-      @keyframes pulseGray {
-        0% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.06;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.08);
-          opacity: 0.03;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(1.16);
-          opacity: 0;
-        }
-      }
-
-      .badge {
-        width: 140px;
-        height: 140px;
+        width: 178px;
+        height: 178px;
         border-radius: 50%;
+        background: var(--accent);
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+        animation: corePulse 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        z-index: 3;
+      }
+      @keyframes corePulse {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        20% {
+          transform: translate(-50%, -50%) scale(0.78);
+        }
+        35% {
+          transform: translate(-50%, -50%) scale(0.9);
+        }
+        70% {
+          transform: translate(-50%, -50%) scale(1.28);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      /* thick dark gray ring — pulses outward */
+      .ring-dark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 138px;
+        height: 138px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        border: 10px solid var(--halo-dark);
+        box-sizing: border-box;
+        animation: ringPulse 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        z-index: 4;
+      }
+      @keyframes ringPulse {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.9;
+        }
+        25% {
+          transform: translate(-50%, -50%) scale(1.05);
+          opacity: 1;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 0.6;
+        }
+        75% {
+          transform: translate(-50%, -50%) scale(1.02);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.9;
+        }
+      }
+
+      /* white inner disc */
+      .inner-disc {
         position: relative;
         z-index: 5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .inner-disc {
-        width: 100px;
-        height: 100px;
-        background: #fff;
+        width: 128px;
+        height: 128px;
         border-radius: 50%;
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.18);
+        background: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 6;
-        position: relative;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
       }
-      /* logo-style: keep the same visual style (generic text + small diamond shapes) */
-      .logo-wrap {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-      .logo-go {
-        color: #2a84c7;
-        font-size: 20px;
-        line-height: 1;
-      }
-      .logo-diamond {
-        width: 14px;
-        height: 14px;
-        transform: rotate(45deg);
-        background: #93c83d;
-        display: inline-block;
-        border-radius: 2px;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+      .logo-img {
+        width: 84px;
+        height: auto;
+        display: block;
       }
 
       /* clock */
       .clock-wrap {
         text-align: center;
-        margin-top: 18px;
-        margin-bottom: 18px;
+        margin-top: 0;
+        margin-bottom: 16px;
       }
       .clock {
-        font-size: 64px;
+        font-size: 55px;
         font-weight: 800;
         margin: 0;
         color: var(--dark);
-        letter-spacing: 1px;
-        display: inline-block;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
         line-height: 1;
       }
-      .clock small {
-        font-size: 26px;
-        font-weight: 800;
-        margin-left: 8px;
-        vertical-align: middle;
-        color: var(--dark);
+      .clock .ampm {
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        margin: 0;
       }
 
       /* card */
       .card {
         max-width: 100%;
-        margin: 18px auto 0;
-        padding: 16px 16px;
+        margin: 16px auto 0;
+        padding: 16px;
         background: #fff;
-        box-shadow: 0 6px 14px var(--card-shadow);
-        border-radius: 6px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
       }
       .card h3 {
         margin: 0;
@@ -215,112 +195,103 @@
         color: var(--muted);
         font-size: 13px;
       }
-      .card .expires {
-        margin-top: 14px;
-        font-weight: 700;
-        color: var(--dark);
+      .expires {
+        margin-top: 8px;
+        padding-top: 10px;
+        font-weight: 400;
+        color: #1f1f1f;
         font-size: 15px;
       }
 
       /* responsive */
-      @media (max-width: 400px) {
-        .container {
-          padding: 14px;
-        }
+      @media (max-width: 420px) {
         .badge-wrap {
           width: 190px;
           height: 190px;
+          margin-bottom: 48px;
         }
-        .ring {
-          width: 190px;
-          height: 190px;
-          box-shadow: inset 0 0 0 30px var(--accent);
+        .core-orange {
+          width: 166px;
+          height: 166px;
         }
-        .pulse-orange {
-          width: 190px;
-          height: 190px;
-        }
-        .clock {
-          font-size: 48px;
-        }
-        .clock small {
-          font-size: 20px;
+        .ring-dark {
+          width: 132px;
+          height: 132px;
+          border-width: 9px;
         }
         .inner-disc {
-          width: 86px;
-          height: 86px;
+          width: 120px;
+          height: 120px;
+        }
+        .logo-img {
+          width: 78px;
+        }
+        .clock {
+          font-size: 44px;
         }
       }
-
-      /* small accessibility tweak */
-      .sr-only {
-        position: absolute;
-        left: -9999px;
-        top: auto;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
+      @media (max-width: 360px) {
+        .badge-wrap {
+          width: 176px;
+          height: 176px;
+          margin-bottom: 46px;
+        }
+        .core-orange {
+          width: 154px;
+          height: 154px;
+        }
+        .ring-dark {
+          width: 124px;
+          height: 124px;
+          border-width: 8px;
+        }
+        .inner-disc {
+          width: 112px;
+          height: 112px;
+        }
+        .logo-img {
+          width: 74px;
+        }
+        .clock {
+          font-size: 39px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container" role="main">
-      <div class="hdr" aria-hidden="false">
+      <div class="hdr">
         <h1 class="title">Metro Transit</h1>
         <div class="subtitle">Show operator your ticket</div>
       </div>
 
-      <div class="badge-wrap" aria-hidden="false">
-        <div class="pulse-orange" aria-hidden="true"></div>
-        <div class="pulse-gray" aria-hidden="true"></div>
-
-        <div class="ring" aria-hidden="true"></div>
-
-        <div class="badge" aria-hidden="false">
-          <div class="inner-disc" aria-hidden="false">
-            <!-- Generic logo-style inside circle (keeps same look; not an exact trademark) -->
-            <div class="logo-wrap" aria-hidden="false">
-              <div class="logo-go">go</div>
-              <div
-                class="logo-diamond"
-                aria-hidden="true"
-                style="background: #2a84c7"
-              ></div>
-              <div
-                class="logo-diamond"
-                aria-hidden="true"
-                style="background: #93c83d"
-              ></div>
-            </div>
-          </div>
+      <div class="badge-wrap">
+        <div class="core-orange" aria-hidden="true"></div>
+        <div class="ring-dark" aria-hidden="true"></div>
+        <div class="inner-disc">
+          <img
+            src="https://www.metrotransit.org/Data/Sites/1/media/fares_passes/goto-logo.png"
+            alt="Metro Transit Go-To logo"
+            class="logo-img"
+            onerror="this.style.display='none';"
+          />
         </div>
       </div>
 
-      <div class="clock-wrap" aria-live="polite">
-        <div style="display: inline-block">
-          <div class="clock" id="clock">
-            9:50:49 <small id="ampm">AM</small>
-          </div>
+      <div class="clock-wrap">
+        <div class="clock" id="clock">
+          <span class="time">9:50:49</span><span class="ampm">AM</span>
         </div>
       </div>
 
       <div class="card" role="region" aria-label="ticket details">
         <h3>Adult All-Day</h3>
         <p>Minneapolis / St. Paul Metro Area</p>
-
-        <!--
-        EXPIRES TEXT:
-        Edit the text below directly when you need to change expiration.
-        Example: Expires Oct 29, 2025 at 2:00 AM
-      -->
-        <div class="expires" id="expiresLine">
-          Expires Oct 30, 2025 at 2:00 AM
-        </div>
+        <div class="expires" id="expiresLine">Expires …</div>
       </div>
     </div>
 
     <script>
-      /* Live clock with precise second boundary updates */
       function pad(n) {
         return n < 10 ? "0" + n : n;
       }
@@ -330,48 +301,44 @@
         const ampm = h >= 12 ? "PM" : "AM";
         h = h % 12;
         if (h === 0) h = 12;
-        const m = pad(now.getMinutes());
-        const s = pad(now.getSeconds());
-        const clockText = h + ":" + m + ":" + s;
-        // update clock element without disturbing markup
-        const clockEl = document.getElementById("clock");
-        clockEl.innerHTML =
-          clockText + ' <small id="ampm">' + ampm + "</small>";
+        const m = pad(now.getMinutes()),
+          s = pad(now.getSeconds());
+        document.querySelector("#clock .time").textContent =
+          h + ":" + m + ":" + s;
+        document.querySelector("#clock .ampm").textContent = ampm;
       }
-
-      function startClock() {
+      (function startClock() {
         updateClock();
-        // align to next whole second for smooth tick
         const now = new Date();
         const msToNext = 1000 - now.getMilliseconds();
-        setTimeout(function () {
+        setTimeout(() => {
           updateClock();
           setInterval(updateClock, 1000);
         }, msToNext);
-      }
-      startClock();
-
-      // Optional: make the expires text editable in-place if user double-taps (handy on phone)
-      // NOTE: This is only local-edit in the open page. To persist, edit the saved file itself.
-      (function enableQuickEdit() {
-        const expiresEl = document.getElementById("expiresLine");
-        let lastTap = 0;
-        expiresEl.addEventListener("click", function (e) {
-          const now = Date.now();
-          if (now - lastTap < 400) {
-            // double-tap detected
-            const newVal = prompt(
-              "Edit expiration text:",
-              expiresEl.textContent
-            );
-            if (newVal !== null) expiresEl.textContent = newVal;
-          }
-          lastTap = now;
-        });
       })();
 
-      // iOS: disable pinch-to-zoom user-scalable when saved to home screen: (optional)
-      // (No JS needed—meta tag is included at top.)
+      /* Dynamic expiration: next day at 2:00 AM */
+      function setNextDay2am() {
+        const now = new Date(),
+          next = new Date(now);
+        next.setDate(now.getDate() + 1);
+        next.setHours(2, 0, 0, 0);
+        const dateFmt = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+        const timeFmt = new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+        });
+        document.getElementById(
+          "expiresLine"
+        ).textContent = `Expires ${dateFmt.format(next)} at ${timeFmt.format(
+          next
+        )}`;
+      }
+      setNextDay2am();
     </script>
   </body>
 </html>
