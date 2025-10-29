@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Metro Transit — Pass</title>
+
+    <style>
+      :root {
+        --bg: #ffffff;
+        --accent: #f37021; /* orange */
+        --dark: #222;
+        --muted: #6b6b6b;
+        --card-shadow: rgba(0, 0, 0, 0.12);
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--dark);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .container {
+        max-width: 420px;
+        margin: 0 auto;
+        padding: 18px 18px 60px;
+        box-sizing: border-box;
+      }
+
+      /* header */
+      .hdr {
+        margin-top: 6px;
+        margin-bottom: 22px;
+        text-align: left;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 26px;
+        margin: 0;
+      }
+      .subtitle {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+
+      /* badge area */
+      .badge-wrap {
+        width: 220px;
+        height: 220px;
+        margin: 10px auto 8px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ring {
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        left: 0;
+        top: 0;
+        box-shadow: inset 0 0 0 36px var(--accent);
+        z-index: 1;
+      }
+      .pulse-orange,
+      .pulse-gray {
+        position: absolute;
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        z-index: 2;
+        pointer-events: none;
+      }
+      .pulse-orange {
+        width: 220px;
+        height: 220px;
+        background: var(--accent);
+        opacity: 0.18;
+        animation: pulseOrange 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+      }
+      .pulse-gray {
+        width: 180px;
+        height: 180px;
+        background: #999;
+        opacity: 0.06;
+        animation: pulseGray 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+        animation-delay: 2.5s;
+      }
+
+      @keyframes pulseOrange {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.18;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.12);
+          opacity: 0.06;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.22);
+          opacity: 0;
+        }
+      }
+      @keyframes pulseGray {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.06;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.08);
+          opacity: 0.03;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.16);
+          opacity: 0;
+        }
+      }
+
+      .badge {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        position: relative;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .inner-disc {
+        width: 100px;
+        height: 100px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 6;
+        position: relative;
+      }
+      /* logo-style: keep the same visual style (generic text + small diamond shapes) */
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .logo-go {
+        color: #2a84c7;
+        font-size: 20px;
+        line-height: 1;
+      }
+      .logo-diamond {
+        width: 14px;
+        height: 14px;
+        transform: rotate(45deg);
+        background: #93c83d;
+        display: inline-block;
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      /* clock */
+      .clock-wrap {
+        text-align: center;
+        margin-top: 18px;
+        margin-bottom: 18px;
+      }
+      .clock {
+        font-size: 64px;
+        font-weight: 800;
+        margin: 0;
+        color: var(--dark);
+        letter-spacing: 1px;
+        display: inline-block;
+        line-height: 1;
+      }
+      .clock small {
+        font-size: 26px;
+        font-weight: 800;
+        margin-left: 8px;
+        vertical-align: middle;
+        color: var(--dark);
+      }
+
+      /* card */
+      .card {
+        max-width: 100%;
+        margin: 18px auto 0;
+        padding: 16px 16px;
+        background: #fff;
+        box-shadow: 0 6px 14px var(--card-shadow);
+        border-radius: 6px;
+      }
+      .card h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .card p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .card .expires {
+        margin-top: 14px;
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 15px;
+      }
+
+      /* responsive */
+      @media (max-width: 400px) {
+        .container {
+          padding: 14px;
+        }
+        .badge-wrap {
+          width: 190px;
+          height: 190px;
+        }
+        .ring {
+          width: 190px;
+          height: 190px;
+          box-shadow: inset 0 0 0 30px var(--accent);
+        }
+        .pulse-orange {
+          width: 190px;
+          height: 190px;
+        }
+        .clock {
+          font-size: 48px;
+        }
+        .clock small {
+          font-size: 20px;
+        }
+        .inner-disc {
+          width: 86px;
+          height: 86px;
+        }
+      }
+
+      /* small accessibility tweak */
+      .sr-only {
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" role="main">
+      <div class="hdr" aria-hidden="false">
+        <h1 class="title">Metro Transit</h1>
+        <div class="subtitle">Show operator your ticket</div>
+      </div>
+
+      <div class="badge-wrap" aria-hidden="false">
+        <div class="pulse-orange" aria-hidden="true"></div>
+        <div class="pulse-gray" aria-hidden="true"></div>
+
+        <div class="ring" aria-hidden="true"></div>
+
+        <div class="badge" aria-hidden="false">
+          <div class="inner-disc" aria-hidden="false">
+            <!-- Generic logo-style inside circle (keeps same look; not an exact trademark) -->
+            <div class="logo-wrap" aria-hidden="false">
+              <div class="logo-go">go</div>
+              <div
+                class="logo-diamond"
+                aria-hidden="true"
+                style="background: #2a84c7"
+              ></div>
+              <div
+                class="logo-diamond"
+                aria-hidden="true"
+                style="background: #93c83d"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clock-wrap" aria-live="polite">
+        <div style="display: inline-block">
+          <div class="clock" id="clock">
+            9:50:49 <small id="ampm">AM</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" role="region" aria-label="ticket details">
+        <h3>Adult All-Day</h3>
+        <p>Minneapolis / St. Paul Metro Area</p>
+
+        <!--
+        EXPIRES TEXT:
+        Edit the text below directly when you need to change expiration.
+        Example: Expires Oct 29, 2025 at 2:00 AM
+      -->
+        <div class="expires" id="expiresLine">
+          Expires Oct 30, 2025 at 2:00 AM
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* Live clock with precise second boundary updates */
+      function pad(n) {
+        return n < 10 ? "0" + n : n;
+      }
+      function updateClock() {
+        const now = new Date();
+        let h = now.getHours();
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12;
+        if (h === 0) h = 12;
+        const m = pad(now.getMinutes());
+        const s = pad(now.getSeconds());
+        const clockText = h + ":" + m + ":" + s;
+        // update clock element without disturbing markup
+        const clockEl = document.getElementById("clock");
+        clockEl.innerHTML =
+          clockText + ' <small id="ampm">' + ampm + "</small>";
+      }
+
+      function startClock() {
+        updateClock();
+        // align to next whole second for smooth tick
+        const now = new Date();
+        const msToNext = 1000 - now.getMilliseconds();
+        setTimeout(function () {
+          updateClock();
+          setInterval(updateClock, 1000);
+        }, msToNext);
+      }
+      startClock();
+
+      // Optional: make the expires text editable in-place if user double-taps (handy on phone)
+      // NOTE: This is only local-edit in the open page. To persist, edit the saved file itself.
+      (function enableQuickEdit() {
+        const expiresEl = document.getElementById("expiresLine");
+        let lastTap = 0;
+        expiresEl.addEventListener("click", function (e) {
+          const now = Date.now();
+          if (now - lastTap < 400) {
+            // double-tap detected
+            const newVal = prompt(
+              "Edit expiration text:",
+              expiresEl.textContent
+            );
+            if (newVal !== null) expiresEl.textContent = newVal;
+          }
+          lastTap = now;
+        });
+      })();
+
+      // iOS: disable pinch-to-zoom user-scalable when saved to home screen: (optional)
+      // (No JS needed—meta tag is included at top.)
+    </script>
+  </body>
+</html>
